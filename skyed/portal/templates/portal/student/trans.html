@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Transcript</title>
+    <script src="https://cdn.tailwindcss.com/"></script>
+</head>
+<body>
+    <div class="flex justify-center px-5 py-3">
+        <div class="flex justify-content justify-center">
+            <a href="{% url 'portal:login_view' %}">
+            <img src="{% static 'portal/Group 12.svg' %}" alt="Logo" width=120>
+            </a>
+        </div>
+    </div><br>
+	<div class="flex justify-center">
+		<h1 class="text-2xl font-bold">Student Transcript</h1><br><br>
+	</div><br><br>
+
+
+	<div class="grid grid-cols-2">
+		<div class="flex justify-center gap-5 text-left text-xl">
+			<div>
+				<p> Student Name: {{login.first_name}} {{login.last_name}}</p>
+				<p> Student ID: {{login.student.registration_id}}</p>
+				<p> GPA: {{login.student.gpa}}</p>
+				<p> mGPA: {{login.student.mgpa}}</p>
+				<p class="mr-">Issued Date: {{document.document_date}}</p>
+				<p class="mr-16">Issued by: SkyED</p>
+			</div>
+		</div>
+
+		<div class="flex justify-center text-left">
+			<div>
+				{{svg|safe}}
+			</div>
+		</div>
+	</div><br><br><br>
+
+    {% comment %} <div class="flex bg-gray-100 ">
+        <div class=" w-full m-1 rounded-lg shadow-lg grid md:col-span-1 bg-white border-black">
+            {% for semester in semesters %}
+									<table class="min-w-fit rounded-lg border-black">
+										<thead class="bg-sky-50 border-black">
+											<th>
+												{{semester.0.semester.get_semester_display}} {{semester.0.semester.get_year}}
+											</th>
+											<th></th><th></th>
+											<tr>
+												<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+													Course Name
+												</th>
+													<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+													Section
+												</th>
+												<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+													Grade
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for section in semester %}
+											<tr class="border-b bg-white border-black">
+												<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+													{{section.course.course_name}}
+												</td>
+												<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+													{{section.snumber}}
+												</td>
+												<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+													{{section.grade}}
+												</td>
+												{% endfor %}
+											</tr>  
+										</tbody>
+									</table><br>
+									{% endfor %}
+        </div>
+    
+        <div class=" w-full m-1 rounded-lg shadow-lg grid md:col-span-1 bg-white border-black">
+            {% for semester in semesters %}
+									<table class="min-w-fit rounded-lg border-black">
+										<thead class="bg-sky-50 border-black">
+											<th>
+												{{semester.0.semester.get_semester_display}} {{semester.0.semester.get_year}}
+											</th>
+											<th></th><th></th>
+											<tr>
+												<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+													Course Name
+												</th>
+													<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+													Section
+												</th>
+												<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+													Grade
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for section in semester %}
+											<tr class="border-b bg-white border-black">
+												<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+													{{section.course.course_name}}
+												</td>
+												<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+													{{section.snumber}}
+												</td>
+												<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+													{{section.grade}}
+												</td>
+												{% endfor %}
+											</tr>  
+										</tbody>
+									</table><br>
+									{% endfor %}
+        </div>
+    </div> {% endcomment %}
+
+	<div class="grid grid-cols-2 gap-5 py-5">
+		{% for semester in semesters %}
+			<div class="grid">
+				<table class="min-w-fit rounded-lg border-black border-collapse w-full">
+					<thead class="bg-sky-50 w-full">
+						<th>
+							{{semester.0.semester.get_semester_display}} {{semester.0.semester.get_year}}
+						</th>
+						<th></th><th></th>
+						<tr>
+							<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+								Course Name
+							</th>
+								<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+								Section
+							</th>
+							<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+								Grade
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for section in semester %}
+							<tr class="border-b bg-white">
+								<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+									{{section.course.course_name}}
+								</td>
+								<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+									{{section.snumber}}
+								</td>
+								<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+									{{section.grade}}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table><br>
+			</div>
+		{% endfor %}
+	</div>
+</body>
+</html>

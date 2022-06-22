@@ -1,0 +1,81 @@
+{% extends "./student_header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %}
+{% load static %}
+
+<center>
+	<input type="button" class=" mt-6 print:hidden border-black border-b-2 active:border-b hover:cursor-pointer py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded-lg transition duration-300" onclick="print();" value="Print"/>
+
+	<div class = " print:border-0 bg-white border border-black w-[1000px] h-[1200px] mt-6 mb-10">
+		<div class = 'my-2'>
+			<a href="{% url 'portal:login_view' %}">
+			<img src="{% static 'portal/Group 12.svg' %}" alt="Logo" width=120>
+			</a>
+		</div>
+		<hr><br>
+		<div class="flex justify-center">
+			<h1 class="text-2xl font-bold">Student Transcript</h1><br><br>
+		</div><br><br>
+	
+	
+		<div class="grid grid-cols-2">
+			<div class="flex justify-center gap-5 text-left text-xl">
+				<div>
+					<p> Student Name: {{login.first_name}} {{login.last_name}}</p>
+					<p> Student ID: {{login.student.registration_id}}</p>
+					<p> GPA: {{login.student.gpa}}</p>
+					<p> mGPA: {{login.student.mgpa}}</p>
+					<p class="mr-">Issued Date: {{document.document_date}}</p>
+					<p class="mr-16">Issued by: SkyED</p>
+				</div>
+			</div>
+	
+			<div class="flex justify-center text-left">
+				<div>
+					{{svg|safe}}
+				</div>
+			</div>
+		</div><br><br><br>
+
+		<div class="grid grid-cols-2 gap-5 py-5">
+			{% for semester in semesters %}
+				<div class="grid">
+					<table class="min-w-fit rounded-lg border-black border-collapse w-full">
+						<thead class="bg-gray-100 w-full">
+							<th>
+								{{semester.0.semester.get_semester_display}} {{semester.0.semester.get_year}}
+							</th>
+							<th></th><th></th>
+							<tr>
+								<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+									Course Name
+								</th>
+									<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+									Section
+								</th>
+								<th scope="col" class="py-3 px-6 text-xs font-medium tracking-wider text-left text-black uppercase">
+									Grade
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for section in semester %}
+								<tr class="border-b bg-white">
+									<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+										{{section.course.course_name}}
+									</td>
+									<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+										{{section.snumber}}
+									</td>
+									<td class="py-4 px-6 text-sm font-medium text-black whitespace-nowrap">
+										{{section.grade}}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table><br>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</center>
+
+{% endblock %}

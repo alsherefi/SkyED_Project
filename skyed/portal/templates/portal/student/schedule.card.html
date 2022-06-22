@@ -1,0 +1,21 @@
+<div onclick="open_modal(this);" data-id="{{classID}}" class=" row-start-[{{row}}] col-start-[{{col}}] row-span-{{len}} bg-{{color}}-50  border border-b-4 border-{{color}}-700 print:border-2  rounded-lg m-1 p-1 flex flex-col hover:border-b-4 active:border-b-2 active:mt-2  hover:cursor-pointer
+  {% if end_time.minute == 15 %} {% comment %} Remove 75% of the 60px from the bottom{% endcomment %}
+    mb-[45px] 
+  {% elif end_time.minute == 30 %} {% comment %} Remove 50% of the 60px from the bottom{% endcomment %}
+    mb-[30px]
+  {% elif end_time.minute == 45 %} {% comment %} Remove 25% of the 60px from the bottom{% endcomment %}
+    mb-[15px]
+  {% elif end_time.minute == 50 %} {% comment %} Remove 20% of the 60px from the bottom{% endcomment %}
+    mb-[10px]
+  {% endif %}
+  {% if time.minute == 15 %} {% comment %} Remove 25% of the 60px from the top{% endcomment %}
+    mt-[15px] 
+  {% elif time.minute == 30 %} {% comment %} Remove 50% of the 60px from the top{% endcomment %}
+    mt-[30px]
+  {% elif time.minute == 45 %} {% comment %} Remove 75% of the 60px from the top{% endcomment %}
+    mt-[45px]
+  {% endif %}">
+    <span class="text-[8px] text-{{color}}-600 print:hidden"> click me</span>
+    <span class="text-xs font-medium text-{{color}}-600 ">{{title}}@{{time}}</span>
+    <span class="text-[8px] text-{{color}}-600 "></span>
+  </div>

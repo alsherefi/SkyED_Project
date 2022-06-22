@@ -1,0 +1,35 @@
+
+
+<div class="grid">
+    <svg width="250" height="250">
+        <circle r="100" cx="125" cy="125" class="track stroke-[15px] fill-transparent" style="
+            stroke: lightgrey;
+        
+        "></circle>
+        <circle r="100" cx="125" cy="125" id="prog" class="progress stroke-blue-700 stroke-[10px] fill-transparent" style="
+            stroke-linecap: round;
+            transform: rotate(270deg);
+            transform-origin: center;
+
+        
+        "></circle>
+      </svg>
+      <script>
+        let progressCircle = document.getElementById("prog");;
+        console.log(progressCircle);
+        let radius = progressCircle.r.baseVal.value;
+        //circumference of a circle = 2πr;
+        let circumference = radius * 2 * Math.PI;
+        progressCircle.style.strokeDasharray = circumference;
+    
+        //0 to 100
+        setProgress({{percent}});
+    
+        function setProgress(percent) {
+            progressCircle.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+        }
+    </script>
+</div>
+
+
+

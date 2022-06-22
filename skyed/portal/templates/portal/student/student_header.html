@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head id="head">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com/"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  {%block styles %}{% endblock %}
+  {% block javascripts %}{% endblock %}
+  <script type="text/babel">
+    const btn = document.querySelector("button.mobile-menu-button");
+    const menu = document.querySelector(".mobile-menu");
+  
+    btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+    });
+  </script>
+  <!--jquery-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'portal/favicon.ico' %}">
+</head>
+
+<body class="font-normal bg-gray-50">
+{% if request.user.student %}
+  <nav class="bg-[#7dd3fc] shadow-lg print:hidden rounded-b-lg">
+    <div class="max-w-6xl mx-auto px-4 py-2">
+      <div class="flex justify-between">
+          <div class="flex space-x-4">
+            <a href="{% url 'portal:student_homepage' %}">
+              <img src="{% static 'portal/Group 12.svg' %}" alt="Logo" width=120>
+            </a>
+
+          <!-- primary nav -->
+          <div class=" pl-32 hidden md:flex items-center space-x-1">
+              <a href="{% url 'portal:student_homepage' %}" class="py-5 px-3 text-black font-bold hover:text-gray-700 hover:overline decoration-4">Home</a>
+              <a href="{% url 'portal:announcement_view' %}" class="py-5 px-3 text-black font-bold hover:text-gray-700 hover:overline decoration-4">Announcements</a>
+              <a href="{% url 'portal:registration_view' %}" class="py-5 px-3 text-black font-bold hover:text-gray-700 hover:overline decoration-4">Registration</a>
+              <a href="{% url 'portal:grades_view' 0 %}" class="py-5 px-3 text-black font-bold hover:text-gray-700 hover:overline decoration-4">Grades</a>
+              <a href="{% url 'portal:account_view' %}" class="py-5 px-3 text-black font-bold hover:text-gray-700 hover:overline decoration-4">Account</a>
+
+
+          </div>
+          </div>
+
+          <!-- secondary nav -->
+          <div class="hidden md:flex items-center space-x-1">
+            <a href="{% url 'portal:logout_view' %}" class="border-black border-b-2 active:border-b py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded-lg transition duration-300">Sign&nbsp;out</a>
+            </div>
+  
+          <!-- mobile button goes here -->
+          <div class="md:hidden flex items-center">
+          <button class="mobile-menu-button">
+              <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+          </button>
+          </div>
+      </div>
+    </div>
+
+    <!-- mobile menu -->
+    <div class="mobile-menu hidden md:hidden">
+      <a href="{% url 'portal:student_homepage' %}" class="block py-2 px-4 text-sm font-bold text-black hover:bg-gray-200 decoration-4">Home</a>
+      <a href="{% url 'portal:announcement_view' %}" class="block py-2 px-4 text-sm font-bold text-black hover:bg-gray-200 decoration-4">Announcements</a>
+      <a href="{% url 'portal:registration_view' %}" class="block py-2 px-4 text-sm font-bold text-black hover:bg-gray-200 decoration-4">Registration</a>
+      <a href="{% url 'portal:grades_view' 0 %}" class="block py-2 px-4 text-sm font-bold text-black hover:bg-gray-200 decoration-4">Grades</a>
+      <a href="{% url 'portal:account_view' %}" class="block py-2 px-4 text-sm font-bold text-black hover:bg-gray-200 decoration-4">Account</a>
+      <div class="py-2 px-4">
+        <a href="{% url 'portal:logout_view' %}" class="border-black border-b-2 active:border-b py-1 px-2 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded transition duration-300">Sign out</a>
+      </div>
+    </div>
+  </nav>
+{% endif %}
+
+	{% block content %}
+	{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+{% extends "./student_header.html" %} {% block title%} Registration Page {% endblock %} 
+{% block content %}
+{% if not_register_time %}
+	Not Registration time, but <a href="{% url 'portal:planner_view' %}">you can plan for your next semesters</a>
+{% else %}
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4">
+    <div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 bg-white">
+        <div class="text-center ">
+						{% if condition %}
+							{{condition}}
+						{% endif %}
+						{% if time_conflict %}
+								Time Conflict With {{time_conflict}}
+						{% endif %}
+            <div class="inline-block relative w-64 m-3">
+                <a class="py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] text-black font-bold rounded-lg transition duration-300" href="{% url 'portal:planner_view' %}">Change registration plan </a>
+                
+            </div>
+    
+            <div class="inline-block relative w-64 m-3">
+                <a class="py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] text-black font-bold rounded-lg transition duration-300" href="{% url 'portal:schedule_view' %}">View your schedule </a>
+            </div>
+
+        </div>    
+        
+    </div>
+
+		<div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 bg-white">
+
+			<table class="min-w-full border-b rounded-lg bg-[#7dd3fc]">
+					<thead>
+							<caption class="text-left ml-8 my-4 font-bold text-3xl">My Registeration Plan</caption>
+							<tr>
+									<th scope="col">
+											Course #
+									</th>
+
+									<th scope="col">
+											Course title
+									</th>  
+
+									<th scope="col">
+											Credits
+									</th> 
+
+									<th scope="col">
+											Show Sections
+									</th> 
+							</tr>
+					</thead>
+					<tbody class="text-sm lg:text-lg bg-white divide-y divide-dashed divide-blue-400 text-center">
+							{% for course in planner_courses %}
+							<p class="{% cycle "" "bg-sky-50" as rowcolors %}"> </p>
+							{% include "./registeration-table-entry.html" with number=course.course_id title=course.course_name credit=course.credits L=rowcolors  %}
+							{% endfor %}
+					</tbody>
+			</table>
+</div>
+    {%if sections%}
+        <div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 bg-white">
+            <h1 class="text-left ml-8 my-4 font-bold text-3xl">Sections</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows md:grid-cols-2 justify-items-center gap-1 text-lg px-4">
+            {% for section in sections %}
+            {% include "./section.card.html" with action="ADD" course=section.course section=section  instructor=section.instructor  campus=section.location building="" room="" days=section.days time=section.from final="23JUN1998 01:00TO03:00" %}
+            {% endfor %}
+            </div>
+
+        </div>
+    {% endif %}
+
+{% if summery %}
+    <div class=" w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 ">
+        <h1 class="text-left ml-8 my-4 font-bold text-3xl">Schedule</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows md:grid-cols-2 justify-items-center gap-1 text-lg px-4">
+        {% for section in summery %}
+            {% include "./section.card.html" with action="REMOVE" course=section.course.course_name section=section  instructor=section.instructor  campus=section.location building="" room="" days=section.days start_time="" final="23JUN1998 01:00TO03:00" %}
+        {% endfor %}    
+        </div>
+    </div>
+{% endif %}
+</div>
+{% endif %}
+{% endblock %}

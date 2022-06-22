@@ -1,0 +1,12 @@
+{% extends "./student_header.html" %}
+
+{% block content %}
+
+	{{doc.id}}
+	{{doc.name}}
+	{{doc.text}}
+	{{doc.document_date}}
+	{{doc.login.first_name}}
+	{{qr}}
+
+{% endblock %}

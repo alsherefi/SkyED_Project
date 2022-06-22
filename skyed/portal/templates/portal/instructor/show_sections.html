@@ -1,0 +1,137 @@
+{% extends "./header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %} 
+
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4">
+    <div class=" w-full m-1 rounded-lg grid md:col-span-2">
+        <div id="sec" class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows md:grid-cols-2 justify-items-center gap-5 text-lg py-3 px-6 ">
+        {% for section in sections %}
+        
+            <div class=" w-full m-1 rounded-lg bg-white shadow-lg ">
+                <table class="w-full">
+                    <caption class="text-left pl-2 py-6 px-2 font-bold text-2xl bg-[#7dd3fc] rounded-t-lg">{{section.course.course_name}}</caption>
+                    <tbody class="divide-y divide-dashed divide-blue-400">
+                        <tr>
+                            <th class="text-left pl-4"> Section </th>
+                            <td class="text-right pr-4"> {{section.snumber}}</td>
+                        </tr>
+                        <tr class="bg-sky-50">
+                            <th class="text-left  pl-4"> Instructor </th>
+                            <td class="text-right pr-4"> {{section.instructor.login}}</td>
+                        </tr>
+                        <tr class="bg-sky-50">
+                            <th class="text-left pl-4"> Building </th>
+                            <td class="text-right pr-4"> {{section.building}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left pl-4"> Room </th>
+                            <td class="text-right pr-4"> {{section.room}}</td>
+                        </tr>
+                        <tr class="bg-sky-50">
+                            <th class="text-left pl-4"> Days </th>
+                            <td class="text-right pr-4"> {{section.days}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left pl-4"> Time </th>
+                            <td class="text-right pr-4"> {{section.start_time}} TO {{section.end_time}}</td>
+                        </tr>
+
+                        <tr>
+                            <th class="p-4 ">
+                                <button id="btn-show-{{forloop.counter0}}" data-sec="{{section.id}}" data-url="{% url 'portal:ajax_students_list' %}" class="border-black border-b-2 active:border-b  btn-show py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">
+                                    SHOW STUDENTS
+                                </button>
+                 
+                            </th>
+                            <th class="p-4">
+                                <a href="{% url 'portal:csv_students_list' sid=section.id %}">
+                                <button  class="border-black border-b-2 active:border-b py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">
+                                    DOWNLOAD STUDENTS
+                                </button>
+                                </a>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+    {% endfor %} 
+        </div>
+        <center>
+            <div id="stud" >
+                <table class="w-full  bg-[#7dd3fc] rounded-lg rounded-b-lg p-3 shadow-lg">
+                    <thead class="divide-y divide-dashed divide-blue-400">
+                        <tr>
+                            <th scope="col" class="text-left pl-4">
+                                Name
+                            </th>
+                            <th scope="col" class="text-left pr-4 py-3">
+                                ID
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="stud-table" class="divide-y divide-dashed divide-blue-400 bg-white">
+                        
+                        
+                    </tbody>
+                    
+                </table>
+            </div>
+        </center>
+
+
+        
+    </div>
+    
+</div>
+
+<script>
+    var stud = document.getElementById("stud-table");
+    $(function() {
+
+        $('#stud').slideUp(0);
+        $('.btn-show').on('click', function(){
+            var id = $(this).attr('data-sec');
+            var myurl = $(this).attr("data-url");
+            $.ajax({
+                type: "GET",
+                data: {json_sec: id},
+                url: myurl,
+                success: function (students) {
+                    list_names(students);
+                },
+            });
+           $('#sec').slideUp(300);
+           $('#stud').slideDown(300);
+        });
+    });
+
+    function list_names(students){
+        var content = "";
+        $.each(students, function(i, student) {
+            var style ='pl-4 p-2';
+            if(i%2 == 1){
+                style += ' bg-sky-50';
+            }
+            content += `
+            <tr class="${style}">
+                <td class="pl-4">
+                    ${student.first_name} ${student.middle_name} ${student.last_name}
+                </td>
+                <td class="pr-4">
+                    ${student.registration_id}
+                </td>
+            </tr>
+            `;
+        });
+
+        content += `<tr><td></td><td><button onclick="hide_list()" class="border-black border-b-2 active:border-b  btn-hide py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">Hide list</button></td></tr>`;
+        stud.innerHTML = content;
+    }
+
+    function hide_list(){
+            $('#stud').slideUp(300);
+            $('#sec').slideDown(300);
+    }
+   
+</script>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "./student_header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %}
+{% load static %}
+
+
+<center>
+	<input type="button" class=" mt-6 print:hidden border-black border-b-2 active:border-b hover:cursor-pointer py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded-lg transition duration-300" onclick="print();" value="Print"/>
+
+	<div class = " print:border-0 bg-white border border-black w-[1000px] h-[1200px] mt-6 mb-10">
+		<div class = 'my-2'>
+			<a href="{% url 'portal:login_view' %}">
+			<img src="{% static 'portal/Group 12.svg' %}" alt="Logo" width=120>
+			</a>
+		</div>
+		<hr>
+		<div class="mt-2 text-left mx-32"> 
+			<br><br><br><br>
+			<p> Student Name: {{login.first_name}} {{login.last_name}}</p>
+			<p> Student ID: {{login.student.registration_id}}</p>
+		</div>
+
+		<div class="mt-2 text-left mx-32"> 
+			<br><br><br><br><br><br>
+			<p> {{text}} </p>
+		</div>
+
+
+		<br><br><br><br><br><br><br><br><br><br>
+		<div class="mt-2 text-justify mx-32">
+			{{svg|safe}}
+		</div>
+
+		<br><br><br><br>
+		<div class="text-right mr-10">
+			<p class="mr-">Issued Date: {{document.document_date}}</p>
+			<p class="mr-16">Issued by: SkyED</p>
+		</div>
+	</div>
+</center>
+
+{% endblock %}

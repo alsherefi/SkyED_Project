@@ -1,0 +1,179 @@
+{% extends "./student_header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %}
+
+<div  id="modal" class="isolate fixed w-full h-full hidden z-[100]">
+  <div class="fixed top-0 bg-black/50 min-h-full min-w-full text-center">
+
+    <div id="" class="fixed top-1/3  md:left-1/3 left-0 shadow-lg md:w-1/3 w-full rounded-lg bg-white ">
+      <table class="w-full">
+          <caption id="modal-title" class="text-left pl-2 py-8 font-bold text-2xl px-2  bg-[#7dd3fc] rounded-t-lg"></caption>
+          <tbody class="divide-y divide-dashed divide-blue-400 py-3 px-2">
+              <tr>
+                  <th class="text-left px-2"> Section </th>
+                  <td id="modal-number" class="text-right px-2"> </td>
+              </tr>
+              <tr class="bg-sky-50">
+                  <th class="text-left  px-2"> Instructor </th>
+                  <td id="modal-instuctor" class="text-right  px-2"> </td>
+              </tr>
+  
+              <tr class="bg-sky-50">
+                  <th class="text-left px-2"> Building </th>
+                  <td id="modal-building" class="text-right px-2"> </td>
+              </tr>
+              <tr>
+                  <th class="text-left px-2"> Room </th>
+                  <td id="modal-room" class="text-right px-2"> </td>
+              </tr>
+              <tr class="bg-sky-50">
+                  <th class="text-left px-2"> Days </th>
+                  <td id="modal-days" class="text-right px-2"> </td>
+              </tr>
+              <tr>
+                  <th class="text-left px-2"> Time </th>
+                  <td class="text-right px-2"> <span id="modal-stime"></span> TO <span id="modal-etime"></span></td>
+              </tr>
+              <tr>
+                  <th colspan="2">
+
+                      <button onclick="close_modal();" class="border-black border-b-2 active:border-b my-2 py-2 px-3 bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold rounded-lg transition duration-300">
+                          Close X
+                      </button>
+    
+                  </th>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4">
+    <div class="print:hidden border border-black w-full h[10%] m-1 py-3 px-2 rounded-t-lg shadow-lg grid md:col-span-2 bg-white">
+        <div class="text-center ">
+            <labal for="semester">Pick semester</labal>
+            <select name="semester" data-url="{% url 'portal:my_schedule' 1%}" onchange="semester_change(this);"  id="semester-opt" class="border border-black rounded">
+                {%for sem in semesters%}
+                  <option id=""  
+                      {%if sem.id == sem_id %}
+                        selected="selected"
+                      {% endif %}
+                  value="{{sem.id}}">{{sem}}</option>
+                {% endfor %}
+            </select>
+            <input type="button" class="border-black border-b-2 active:border-b hover:cursor-pointer py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded-lg transition duration-300" onclick="print();" value="Print"/>
+        </div>    
+        
+      </div>
+  </div>
+        <div  id="printme" class="mt-4 mb-3 rounded-b-xl ">
+        <h1 class=" print:block text-center text-3xl font-bold rounded-md w-full hidden"> Student {{request.user}} ID: {{request.user.student.registration_id}} <br> {{semesters.1}}</h1>
+        <div class="not-prose relative bg-slate-50 shadow-md rounded-xl overflow-hidden mx-5 ">
+
+        <div style="background-position:10px 10px" class="lg:max-h-20 absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] ">
+        </div>
+        <div class="relative rounded-b-xl overflow-auto ">
+            <div class=" bg-white  shadow-xl overflow-hidden  " >
+              <!--TODO-->
+              <div class="overflow-auto grid print:grid-cols-[17vw,repeat(5,15vw)] sm:grid-cols-[70px,repeat(5,1fr)] sm:grid-rows-[auto,repeat(13,60px)] 2xl:grid-cols-[70px,repeat(5,300px)] grid-cols-[70px,repeat(5,150px)] grid-rows-[60px,repeat(13,60px)] h-screen">
+                  
+                <!-- Calendar frame --> <!-- Omar's Note: Just Understand how this part work -->
+                <div class="row-start-[1] col-start-[1]  top-0 z-10 bg-white border-slate-100  bg-clip-padding text-slate-900  border-b text-sm font-medium py-2 sticky"></div>
+        
+                {% for i, day in weekdays %}
+                  <div class="row-start-[1] col-start-[{{i}}] top-0 z-10 bg-white bg-clip-padding text-slate-900  border-b text-sm font-medium py-2 text-center sticky lg:max-h-20">{{day}}</div>
+                {% endfor %}
+        
+                {% for i, hour in rows %}
+                  <div class="row-start-[{{i}}] col-start-[1] border-slate-200  border-r text-xs p-1.5 text-right text-slate-400 uppercase sticky left-0 bg-white  font-medium">{{hour}}</div>
+                  {% for j in columns %}
+                    <div class="row-start-[{{i}}] col-start-[{{j}}] border-slate-200  border-b border-r"></div>
+                  {% endfor %}
+                  <div class="row-start-[{{i}}] col-start-[5] border-slate-200  border-b"></div>
+                {% endfor %}
+
+                {%for sec in sun%}
+                  {% include "./schedule.card.html" with classID=sec.sec.id title=sec.sec.course.abbr location=sec.sec.location len=sec.len row=sec.row col="2" time=sec.sec.start_time end_time=sec.sec.end_time color=sec.color%}
+                {%endfor%}
+
+                {%for sec in mon%}
+                  {% include "./schedule.card.html" with classID=sec.sec.id title=sec.sec.course.abbr location=sec.sec.location len=sec.len row=sec.row col="3" time=sec.sec.start_time end_time=sec.sec.end_time color=sec.color%}
+                {%endfor%}
+
+                {%for sec in tue%}
+                  {% include "./schedule.card.html" with classID=sec.sec.id title=sec.sec.course.abbr location=sec.sec.location len=sec.len row=sec.row col="4" time=sec.sec.start_time end_time=sec.sec.end_time color=sec.color %}
+                {%endfor%}
+
+                {%for sec in wed%}
+                  {% include "./schedule.card.html" with classID=sec.sec.id title=sec.sec.course.abbr location=sec.sec.location len=sec.len row=sec.row col="5" time=sec.sec.start_time end_time=sec.sec.end_time color=sec.color %}
+                {%endfor%}
+
+                {%for sec in thu %}
+                  {% include "./schedule.card.html" with classID=sec.sec.id title=sec.sec.course.abbr location=sec.sec.location len=sec.len row=sec.row col="6" time=sec.sec.start_time end_time=sec.sec.end_time color=sec.color %}
+                {%endfor%}
+                
+              </div>
+              </div>
+            </div><div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl "></div></div></div>
+    </div>
+
+    <script type="text/javascript">
+        var S = {
+          {% for sec in sections %}
+            '{{sec.id}}': {
+                name: '{{sec.course.course_name}}',
+                number: '{{sec.snumber}}',
+                instructor: '{{sec.instructor.login}}',
+                building: '{{sec.building}}',
+                room: '{{sec.room}}',
+                days: '{{sec.days}}',
+                stime: '{{sec.start_time}}',
+                etime: '{{sec.end_time}}'
+
+            },
+          {% endfor %}
+        };
+        
+      $(function(){
+        var T = "hello";
+        {%for sec in sections%}
+        $("#class-{{sec.snumber}}").on('click', function(){
+          console.log("hello");
+        });
+        {% endfor %}
+
+    
+      });
+
+      function semester_change(me){
+        window.location.href = "../sem=" + me.value +"/";
+      }
+
+      function open_modal(tag){
+
+         var id = tag.getAttribute("data-id");
+
+         console.log(id);
+
+        document.getElementById("modal-title").innerHTML = S[""+ id +""].name;
+        document.getElementById("modal-number").innerHTML = S[""+ id +""].number;
+        document.getElementById("modal-instuctor").innerHTML = S[""+ id +""].instructor;
+        document.getElementById("modal-building").innerHTML = S[""+ id +""].building;
+        document.getElementById("modal-room").innerHTML = S[""+ id +""].room;
+        document.getElementById("modal-days").innerHTML = S[""+ id +""].days;
+        document.getElementById("modal-stime").innerHTML = S[""+ id +""].stime;
+        document.getElementById("modal-etime").innerHTML = S[""+ id +""].etime;
+
+
+        console.log(`in Test = ${tag.innerHTML}`);
+        $('#modal').removeClass("hidden");
+        $('body').addClass("overflow-hidden");
+      }
+
+      function close_modal(){
+        console.log(`Modal closed. `);
+        $('#modal').addClass("hidden");
+        $('body').removeClass("overflow-hidden");
+      }
+  </script>
+
+{%endblock%}

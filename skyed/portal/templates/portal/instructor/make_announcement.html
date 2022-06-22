@@ -1,0 +1,72 @@
+{% extends "./header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %} 
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4  ">
+
+	<div class="lg:w-1/2 w-full m-1  rounded-lg shadow-lg bg-white md:col-span-2">
+		<h1 class="font-bold py-3 px-2 bg-[#7dd3fc] rounded-t-lg">
+			Make Announcement
+		</h1>
+		<div>
+			<p class="text-justify py-3 px-2">
+				<textarea id="announcement" class="border border-black w-full h-full rounded-lg p-5 " style="resize: none;" placeholder="Write your anouncement. . . " rows="4" cols="50"></textarea>
+			</p>
+		</div>
+		<div class="card-footer justify-end text-right pb-3 pr-2">
+			<select name="sections" data-url="" onchange=""  id="sections-opt" class="border border-black rounded">
+				{% if is_manager%}
+					<option value="D">Department wide announcements</option>
+				{% endif %}
+				{% for sec in sections%}
+					<option value="{{sec.id}}">{{sec.course.abbr}}, {{sec.days}}, {{sec.start_time}}</option>
+				{% endfor %}
+				
+
+            </select>
+			<button onclick="publish();" class="border-black border-b-2 active:border-b py-2 px-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-900 text-white font-bold rounded-lg transition duration-300"> Publish</button>
+		</div>
+	</div>
+
+	
+	<div  id="myGrid" class="md:col-span-2 grid md:grid-cols-2 grid-cols-1 grid-flow-rows justify-items-center gap-2 lg:gap-6 ">
+		{% for ann in announcements %}
+        	{% include "../student/announcement.card.html" with title=ann.title info=ann.info name=ann.name date=ann.adate %}
+		{% endfor %}
+	</div>
+</div>
+
+<script>
+	function publish(){
+		var myurl = "{% url 'portal:send_announcement' %}";
+		var myOption = document.getElementById("sections-opt").value;
+		var myann = document.getElementById("announcement").value;
+		if(myann === ""){
+			alert("cant be empty!");
+			return 0;
+		}		
+
+		 $.ajax({
+                type: "POST",
+                data: {sid: myOption,
+						ann: myann,
+						csrfmiddlewaretoken: '{{ csrf_token }}'
+						},
+                url: myurl,
+                success: function (ann) {
+                    show_ann(ann);
+                },
+            });
+
+	}
+
+	function show_ann(ann){
+		var grid = document.getElementById("myGrid");
+		console.log(grid);
+
+		grid.innerHTML = `
+			{% include "../student/announcement.card.html" with title="${ann.title}" info="${ann.info}" name="${ann.name}" date="${ann.adate}" %}
+			${grid.innerHTML}
+		`;
+		console.log(grid.innerHTML);
+	}
+</script>
+
+{% endblock %}

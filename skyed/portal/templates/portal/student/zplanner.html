@@ -1,0 +1,185 @@
+{% extends "./student_header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %}
+
+
+
+
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4">
+    <div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 bg-white">
+        <div class="text-center ">
+					{% if added_to_plan %}
+						{{added_to_plan}}
+					{% elif not_passed %}
+						{{not_passed}}
+					{% endif %}
+						
+					<div class="inline-block  m-3">
+						<form action="{% url 'portal:planner_view' %}" method="GET">
+							<label for="semester">Semester: </label>
+							<select class="border border-black rounded" id="semester" name="semester" onchange="this.form.submit()">
+							{% for semester in semesters %}
+								{% if  selected_semester == semester %}
+									<option selected value="{{semester.0}} {{semester.1}} {{semester.2}}">{{semester.0}} {{semester.1}}/{{semester.2}}</option>
+								{% else %}
+									<option value="{{semester.0}} {{semester.1}} {{semester.2}}">{{semester.0}} {{semester.1}}/{{semester.2}}</option>
+								{% endif %}
+							{% endfor %}
+							</select>
+						</form>						
+					</div>
+
+        </div>    
+        
+    </div>
+
+	<div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 bg-white">
+			<h1 class="text-left ml-8 my-4 font-bold text-3xl">Search</h1>
+					<div>
+					<select id="dept-option" class=" ml-4 border border-black rounded">
+						{% for dept in departments %}
+							<option value="{{dept.id}}"> {{dept.name}} </option>
+						{% endfor %}
+					</select>
+					<input id="search-box" required type="text" placeholder="e.g. Programming 1" class=" pl-2 border border-black rounded mb-2"/>
+					<button onclick="search_ajax();" type="submit" class="search-btn py-2 px-3 border-b-2 border-black  bg-[#fbbf24] hover:bg-[#facc15] active:border-b active:mt-[1px] text-black font-bold rounded-lg transition duration-300" >Search</button>
+					</div>
+	</div>
+
+	<h1 class=" text-left my-4 font-bold text-3xl col-span-2">Search result</h1>
+    <div class=" w-full m-1 rounded-lg shadow-lg grid md:col-span-2 ">
+        
+            <table class="min-w-full border-b bg-[#7dd3fc] rounded-lg py-3 px-2">
+                <thead >
+                    <tr>
+                        <th scope="col" class="py-4 text-2xl">
+                            Course#
+                        </th>
+
+                        <th scope="col" class="py-4 text-2xl">
+                            Name
+                        </th>  
+
+                        <th scope="col" class="py-4 text-2xl">
+                            Credits
+                        </th> 
+
+                        <th scope="col" class="py-4 text-2xl">
+                            Action
+                        </th> 
+                    </tr>
+                </thead>
+                <tbody id="search-result" class="text-sm lg:text-lg bg-white divide-y divide-dashed divide-blue-400 text-center">
+                    
+                </tbody>
+            </table>
+        
+    </div>
+
+		<div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg grid md:col-span-2 bg-white">
+
+			<table class="min-w-full border-b rounded-lg bg-[#7dd3fc]">
+					<thead>
+							<caption class="text-left ml-8 my-4 font-bold text-3xl">My Registeration Plan</caption>
+							<tr>
+									<th scope="col">
+											Course #
+									</th>
+
+									<th scope="col">
+											Course title
+									</th>  
+
+									<th scope="col">
+											Credits
+									</th> 
+
+									<th scope="col">
+											REMOVE
+									</th> 
+							</tr>
+					</thead>
+					<tbody class="text-sm lg:text-lg bg-white divide-y divide-dashed divide-blue-400 text-center">
+							{% for course in student_courses %}
+							<p class="{% cycle "" "bg-sky-50" as rowcolors %}"> </p>
+							{% include "./course_card.html" with number=course.course_id title=course.course_name credit=course.credits L=rowcolors semester=selected_semester.0 year=selected_semester.1 isnew=isnew %}
+							{% endfor %}
+					</tbody>
+			</table>
+</div>
+
+	
+
+
+
+	
+	</div>
+
+<script>
+
+
+
+	function search_ajax(){
+			//alert("click");
+            var id = document.getElementById("dept-option").value;
+            var myurl = "{% url 'portal:course_search' %}";
+            $.ajax({
+                type: "GET",
+                data: {
+					department: id,
+					course: document.getElementById("search-box").value
+				},
+                url: myurl,
+                success: function(ms){
+					render_search(ms);
+					}
+            });
+  }
+
+	function render_search(ms){
+		document.getElementById("search-result").innerHTML = "";
+		var mycolor = "bg-sky-50";
+		$.each(ms, function(i, m) {
+			row = "";
+			if(i%2 == 1)
+				row = mycolor;
+
+			var table_entry = `{% include "./zplan-table-entry.html" with number='${m.course_id}'  title='${m.course_name}' credit='${m.credits}' L='${row}'  %}`;
+			document.getElementById("search-result").innerHTML += table_entry;
+		})
+	}
+
+	function add_to_plan_ajax(id) {
+            var myurl = "{% url 'portal:add_to_plan_view' %}";
+            $.ajax({
+                type: "POST",
+                data: {
+					course: id,
+					semester: '{{selected_semester.0}}',
+					year: '{{selected_semester.1}}',
+					csrfmiddlewaretoken: '{{ csrf_token }}'
+				},
+                url: myurl,
+                success: function(ms){
+									if (ms.hasOwnProperty('already added')) {
+										alert('This course is already in your planner')
+									} else if (ms.hasOwnProperty('not_passed') == true) {
+										var s = 'Prerequisites Required\n';
+										$.each(ms['courses'], function(i, course){
+											s += '- ' + course[0] + ' ' + course[1] + '\n';
+										});
+										alert(s);
+									} else {
+										alert('Added to the planner successfully');
+
+										
+									}
+					},
+					error: function(msg){
+						alert(msg['Error'])
+					}
+            });
+	}
+
+	
+
+</script>
+{% endblock %}

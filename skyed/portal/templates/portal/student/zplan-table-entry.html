@@ -1,0 +1,20 @@
+<tr class="{{L}}">
+    <td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+        {{number}}
+    </td>
+
+    <td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+        {{title}}
+    </td>
+
+    <td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+
+        {{credit}}
+    </td>
+
+    <td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+            <button onclick="add_to_plan_ajax('{{number}}');" data-url="{% url 'portal:show_sections' %}" type="submit" id="{{number}}" class="border-black border-b-2 active:border-b sec-btn py-2 px-3 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded-lg transition duration-300">
+                Add
+            </button>
+    </td>
+</tr>

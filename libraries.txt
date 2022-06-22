@@ -1,0 +1,6 @@
+pip install django_filter
+pip install djangorestframework
+pip install markdown
+pip install psycopg2-binary
+pip install xhtml2pdf
+pip install django_extensions

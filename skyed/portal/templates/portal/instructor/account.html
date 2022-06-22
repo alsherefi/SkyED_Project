@@ -1,0 +1,70 @@
+{% extends "./header.html" %} {% block title%} Account Page {% endblock %}
+{% load static %} 
+{% block javascripts %}
+  <script src="{% static 'portal/change_password.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+  <div class="grid grid-cols-1  grid-flow-rows mt-5 justify-items-center gap-6 text-lg px-4">
+    <div class="md:w-1/2 w-full m-1 rounded-lg shadow-lg grid md:col-span-2 divide-y divide-dashed divide-blue-400 bg-white">
+      <p class="font-bold text-xl text-center rounded-t-lg pb-2 py-3 px-2 bg-[#7dd3fc]">Instructor Information</p>
+    
+        <div class="flex justify-between bg-sky-50">
+          <span class="content-start font-medium"> Name</span>
+          <span class="content-end">{{user.first_name}} {{user.last_name}}</span>
+        </div>
+
+        <div class="flex justify-between ">
+            <span class="content-start font-medium"> Email</span>
+            <span class="content-end">{{user.email}}</span>
+          </div>
+      
+    
+    
+        <div class="flex justify-between bg-sky-50">
+            <span class="content-start font-medium">Your ID</span>
+            <span class="content-end">{{request.user.instructor.registration_id}}</span>
+        </div>
+    
+        <div class="flex justify-between ">
+            <span class="content-start font-medium">Department </span>
+            <span class="content-end">{{request.user.instructor.dept.name}}</span>
+        </div>
+     
+    </div>
+
+    <div class="w-full m-1 rounded-lg shadow-lg grid md:col-span-1 bg-white">
+      {% if condition == True %}
+        <script>
+          alert("Password changed success!");
+        </script>
+      {% endif %}
+      <form id="form" method="POST" action="{% url 'portal:inst_change_password' %}">
+        {% csrf_token %}
+        <h1 class="text-left pl-4 py-4 rounded-t-lg font-bold text-3xl  bg-[#7dd3fc]">Change password</h1>
+        <label class="text-lg font-semibold pl-2">
+          Old password
+        </lable><br>
+        <input name="old_password" id="old_password" type="password" class="border border-black rounded-lg text-lg m-2 px-2"><br>
+        {% if condition == False %}
+          <div class="text-red-500">Invalid Password</div>
+        {% endif %}
+        <label class="text-lg font-semibold pl-2">
+          New password
+        </lable><br>
+        <input name="new_password" id="new_password" type="password" class="border border-black rounded-lg text-lg m-2 px-2 "><br>
+        <label class="text-lg font-semibold pl-2">
+          Confirm password
+        </lable><br>
+        <div id="perr"></div>
+        <input id="con_password" type="password" class="border border-black rounded-lg text-lg m-2 px-2"><br>
+        <div id="cperr"></div>
+        <button id="change-btn" type="submit" class="m-2 py-2 mb-3 px-3 bg-[#fbbf24] hover:bg-[#facc15] text-black font-bold rounded-lg transition duration-300">
+          CHANGE!
+        </button>
+      </form>
+    </div>
+
+  </div>
+  
+{%endblock%}

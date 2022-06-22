@@ -1,0 +1,243 @@
+{% extends "./header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %} 
+{{not_grade_time}}
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4">
+    <div class="w-full m-1 py-3 px-2 rounded-lg grid md:col-span-2 ">
+        <div id="sec" class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows md:grid-cols-2 justify-items-center gap-5 text-lg py-3 px-6">
+        {% for section in sections %}
+        
+        <div class=" w-full m-1 rounded-lg bg-white shadow-lg ">
+                <table class="w-full">
+                    <caption class="text-left pl-2 py-6 px-2 font-bold text-2xl bg-[#7dd3fc] rounded-t-lg">{{section.course.course_name}}</caption>
+                    <tbody class="divide-y divide-dashed divide-blue-400">
+                        <tr>
+                            <th class="text-left pl-4"> Section </th>
+                            <td class="text-right pr-4"> {{section.snumber}}</td>
+                        </tr>
+                        <tr class="bg-sky-50">
+                            <th class="text-left pl-4"> Instructor </th>
+                            <td class="text-right pr-4"> {{section.instructor.login}}</td>
+                        </tr>
+                        <tr class="bg-sky-50">
+                            <th class="text-left pl-4"> Building </th>
+                            <td class="text-right pr-4"> {{section.building}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left pl-4"> Room </th>
+                            <td class="text-right pr-4"> {{section.room}}</td>
+                        </tr>
+                        <tr class="bg-sky-50">
+                            <th class="text-left pl-4"> Days </th>
+                            <td class="text-right pr-4"> {{section.days}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left pl-4"> Time </th>
+                            <td class="text-right pr-4"> {{section.start_time}} TO {{section.end_time}}</td>
+                        </tr>
+                     
+                        <tr>
+                            <th class="p-4">
+                                <button id="btn-show-{{forloop.counter0}}" data-sec="{{section.id}}" data-url="{% url 'portal:ajax_grades_list' %}" class=" btn-show py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">
+                                    GRADE STUDENTS
+                                </button>
+                 
+                            </th>
+                            <th class="p-4">
+                                <a href="{% url 'portal:csv_grades_list' sid=section.id %}">
+                                <button  class="py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">
+                                    DOWNLOAD GRADES
+                                </button>
+                                </a>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+    {% endfor %} 
+        </div>
+    
+            <div id="stud" >
+                <table class=" w-full  bg-[#7dd3fc] rounded-lg rounded-b-lg p-3 shadow-lg">
+                    <thead class="divide-y divide-dashed divide-blue-400">
+                        <tr>
+                            <th scope="col" class="text-left pl-4">
+                                Name
+                            </th>
+                            <th scope="col" class="text-left">
+                                ID
+                            </th>
+                            <th scope="col" class="text-left pr-4 py-3">
+                                Grade
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="stud-table" class="divide-y divide-dashed divide-blue-400 bg-white">
+
+                        
+                    </tbody>
+                    
+                </table>
+            </div>
+
+
+        
+    </div>
+    
+</div>
+
+<script>
+    var stud = document.getElementById("stud-table");
+    var no_stud = 0;
+    var id;
+    $(function() {
+
+        $('#stud').slideUp(0);
+        $('.btn-show').on('click', function(){
+            id = $(this).attr('data-sec');
+            var myurl = $(this).attr("data-url");
+            $.ajax({
+                type: "GET",
+                data: {json_sec: id},
+                url: myurl,
+                success: function (students) {
+                    list_names(students);
+                },
+            });
+           $('#sec').slideUp(300);
+           $('#stud').slideDown(300);
+        });
+    });
+
+    function list_names(students){
+        no_stud = 0;
+        var content = "";
+        $.each(students, function(i, student) {
+            no_stud++;
+            var style ='pl-4 p-2';
+            if(i%2 == 1){
+                style += ' bg-sky-50';
+            }
+            //console.log(`grade: ${student.grade}`);
+            var stud_grade = new Array(24).fill("");
+            //TODO: create the defualt gade to be displayed.
+            
+            var grade;
+            (grade = []).length = 12;
+            grade.fill("")
+
+            if(student.grade === 'n'){
+                grade[0] = "selected";
+            }
+            if(student.grade === 'A'){
+                grade[1] = "selected";
+            }
+            if(student.grade === 'A-'){
+                grade[2] = "selected";
+            }
+            if(student.grade === 'B+'){
+                grade[3] = "selected";
+            }
+            if(student.grade === 'B'){
+                grade[4] = "selected";
+            }
+            if(student.grade === 'B-'){
+                grade[5] = "selected";
+            }
+            if(student.grade === 'C+'){
+                grade[6] = "selected";
+            }
+            if(student.grade === 'C'){
+                grade[7] = "selected";
+            }
+            if(student.grade === 'C-'){
+                grade[8] = "selected";
+            }
+
+            if(student.grade === 'D+'){
+                grade[9] = "selected";
+            }
+            if(student.grade === 'D'){
+                grade[10] = "selected";
+            }
+            if(student.grade === 'F'){
+                grade[11] = "selected";
+            }
+
+            content += `
+            <tr class="${style}"">
+                <td class="pr-4">
+                    ${student.first_name} ${student.middle_name} ${student.last_name}
+                </td>
+                <td class="pl-4">
+                    ${student.registration_id}
+                </td>
+                <td>
+                    <select name="grade" id="${student.registration_id}" class="grade border border-black rounded">
+                        <option ${grade[0]} value="n">--</option>
+                        <option ${grade[1]} value="A">A</option>
+                        <option ${grade[2]} value="A-">A-</option>
+                        <option ${grade[3]} value="B+">B+</option>
+                        <option ${grade[4]} value="B">B</option>
+                        <option ${grade[5]} value="B-">B-</option>
+                        <option ${grade[6]} value="C+">C+</option>
+                        <option ${grade[7]} value="C">C</option>
+                        <option ${grade[8]} value="C-">C-</option>
+                        <option ${grade[9]} value="D">D</option>
+                        <option ${grade[10]} value="D-">D-</option>
+                        <option ${grade[11]} value="F">F</option>
+                    </select>
+                </td>
+            </tr>
+            `;
+        });
+
+        content += `<tr>
+                        <td class="bg-white"></td>
+                        <td><button onclick="send_grades()" class=" btn-hide py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">Send Grades</button></td>
+                        <td><button onclick="hide_list()" class=" btn-hide py-2 px-3 bg-green-600 hover:bg-green-400 active:bg-green-800 text-white font-bold rounded-lg transition duration-300">Hide list</button></td>
+                    </tr>`;
+        stud.innerHTML = content;
+    }
+
+    function hide_list(){
+            $('#stud').slideUp(300);
+            $('#sec').slideDown(300);
+    }
+
+    function send_grades(){
+        var grades = {};
+        var students = document.getElementsByClassName("grade");
+        var myurl = "{% url 'portal:ajax_grading' %}";
+        for(i = 0; i < no_stud; ++i){
+            grades[students[i].id] = students[i].value;
+            console.log(`The Id: ${students[i].id} & The value is ${students[i].value}`);
+        }
+        console.log(id);
+        var final_grades = JSON.stringify(grades)
+         $.ajax({
+                 type: "POST",
+                 data: {json_sec: id,
+                        students_grades: final_grades,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                        
+                    },
+                 url: myurl,
+                 success: function (data) {
+                     grading_succ(data);
+                 },
+             });
+    }
+
+    function grading_succ(data){
+        // alert(`Entered grading, succ: ${data.succ}`);
+        if(data.succ === 1){
+            alert("grading successfull");
+        }
+        else if(data.succ === -1 ) {
+            alert("grading Failed");
+        }
+    }
+   
+</script>
+
+{% endblock %}

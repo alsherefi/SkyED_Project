@@ -1,0 +1,65 @@
+
+
+<div class="grid grid-cols-2 w-full m-1 rounded-lg shadow-lg  bg-white text-center">
+
+    <div class="font-bold bg-[#7dd3fc]  p-2 rounded-t-lg col-span-2 grid grid-cols-2">
+    <h1 class="font-bold text-xl "> Credits</h1> <h1 class="font-bold text-xl "> Major Credits</h1>
+    </div>
+    <svg width="100" height="100" class="justify-self-center">
+        <circle r="40" cx="50" cy="50" class="track stroke-[15px] stroke-gray-200 fill-transparent"></circle>
+        <circle r="40" cx="50" cy="50" id="prog" class="progress stroke-blue-700 stroke-[10px] fill-transparent" style="
+            stroke-linecap: round;
+            transform: rotate(270deg);
+            transform-origin: center;
+
+        
+        "></circle>
+      </svg>
+
+
+      
+      <svg width="100" height="100" class="justify-self-center">
+        <circle r="40" cx="50" cy="50" class="track2 stroke-[15px] stroke-gray-200 fill-transparent"></circle>
+        <circle r="40" cx="50" cy="50" id="prog2" class="progress stroke-blue-700 stroke-[10px] fill-transparent" style="
+            stroke-linecap: round;
+            transform: rotate(270deg);
+            transform-origin: center;
+
+        
+        "></circle>
+      </svg>
+      
+      <script>
+
+        percent1 = {{credit}}
+        percent2 = {{mcredit}}
+        let progressCircle = document.getElementById("prog");;
+        console.log(progressCircle);
+        let radius = progressCircle.r.baseVal.value;
+        //circumference of a circle = 2πr;
+        let circumference = radius * 2 * Math.PI;
+        progressCircle.style.strokeDasharray = circumference;
+    
+        //0 to 100
+        setProgress(percent1);
+    
+        function setProgress(percent) {
+            progressCircle.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+        }
+
+        let progressCircle2 = document.getElementById("prog2");;
+        let radius2 = progressCircle2.r.baseVal.value;
+        //circumference of a circle = 2πr;
+        let circumference2 = radius2 * 2 * Math.PI;
+        progressCircle2.style.strokeDasharray = circumference2;
+    
+        //0 to 100
+        setProgress2(percent2);
+    
+        function setProgress2(percent) {
+            progressCircle2.style.strokeDashoffset = circumference2 - (percent / 100) * circumference2;
+        }
+    </script>
+</div>
+
+

@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign-in Page</title>
+        <script src="{% static 'portal/sign_in.js' %}" defer></script>
+        <script src="https://cdn.tailwindcss.com/"></script>   
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">         
+    </head>
+    <body>
+      <nav class="bg-[#7dd3fc] shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-2">
+          <div class="flex justify-center">
+            <div>
+              <a href="{% url 'portal:login_view' %}">
+                <img src="{% static 'portal/Group 12.svg' %}" alt="Logo" width=120>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <a href="#" class="flex justify-center">
+      </a>
+      <div class="flex justify-center">
+        <div class="flex flex-col justify-center p-4 max-w-sm rounded-lg border border-white sm:p-6 lg:p-8 mt-10 w-full">
+          <form class="space-y-6" method="POST" action="{% url 'portal:login_view' %}" name="form" id="form">
+            {% csrf_token %}
+            <h3 class="text-xl font-medium">Sign in</h3>
+              <div>
+                <label for="email" class="block mb-2 text-sm font-medium">Email</label>
+                <span id="eerr"></span>
+                <input type="email" name="email" id="email" class="bg-[#F0F9FF] border border-black text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 placeholder-gray-400" placeholder="name@dept.collage.uni.kw" {% if email %} value="{{email}}" {% endif %}>
+              </div>
+              <div>
+                <label for="password" class="block mb-2 text-sm font-medium">Password</label>
+                <span id="perr"></span>
+                <input type="password" name="password" id="password" placeholder="Password" class="bg-[#F0F9FF] border border-black text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 placeholder-gray-400">
+              </div>
+              <div class="flex items-start">
+              </div>
+              {% if doesnt_exist %}
+                <div class="flex items-start text-red-500">
+                      Your email and password didn't match. 
+                      Please try again.
+                </div>
+              {% endif %}
+              <div>
+                <button type="submit" id="submit" name="submit" class="w-full text-white bg-[#fbbf24] border-b-2  border-black hover:bg-[#facc15]  active:mt-2 active:border-b transition duration-300 font-bold rounded-lg text-sm mt-2 mb-1 px-5 py-2 text-center">Sign in</button>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
+
+    </body>
+</html>

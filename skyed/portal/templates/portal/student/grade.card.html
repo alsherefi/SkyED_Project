@@ -1,0 +1,14 @@
+{% if grade %}
+    <div class="w-full m-1 rounded-lg shadow-lg bg-white">
+        <div class="font-bold text-center bg-[#7dd3fc] p-2 rounded-t-lg">
+            {{title}}
+        </div>
+        <div class="text-center text-9xl font-black px-5 my-2
+            {% if grade  == 'F' %}
+                text-red-600
+            {% endif %}
+         ">
+            {{grade}}
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,129 @@
+{% extends "./student_header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %} {% comment %}
+<div id="alert-additional-content-1" class="p-4 mb-4 bg-blue-100 rounded-lg dark:bg-blue-200" role="alert">
+    <div class="flex items-center">
+        <svg class="mr-2 w-5 h-5 text-blue-700 dark:text-blue-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <h3 class="text-lg font-medium text-blue-700 dark:text-blue-800">This is a info alert</h3>
+    </div>
+    <div class="mt-2 mb-4 text-sm text-blue-700 dark:text-blue-800">
+        More info about this info alert goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
+    </div>
+    <div class="flex">
+        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 text-center inline-flex items-center dark:bg-blue-800 dark:hover:bg-blue-900">
+      <svg class="-ml-0.5 mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+      View more
+    </button>
+        <button type="button" class="text-blue-700 bg-transparent border border-blue-700 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:border-blue-800 dark:text-blue-800 dark:hover:text-white"
+            data-dismiss-target="#alert-additional-content-1" aria-label="Close">
+      Dismiss
+    </button>
+    </div> {% endcomment %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-1 lg:gap-6 text-md md:text-lg px-1 lg:px-4 ">
+        {% include "./student-info.card.html" with warn=request.user.student.get_warning_display status=request.user.student.get_status_display myfname=request.user.first_name mylname=request.user.last_name mysid=request.user.student.registration_id myterms=request.user.student.passed_terms gpa=request.user.student.gpa|floatformat:2 mgpa=request.user.student.mgpa|floatformat:2 %}
+
+
+        {% if register_time %}
+        <div class="w-full m-1 rounded-lg shadow-lg  bg-white">
+            <h1 class="font-bold bg-[#7dd3fc]  p-2 rounded-t-lg">
+                Dear Student:
+            </h1>
+            <div class="py-2 px-3">
+                <p class="text-justify pb-2">
+                    You can register now. your regisration period finishes at {{semester.registration_ends}} <br><br><a class="border-black border-b-2 active:border-b py-2 px-3 mb-2 bg-[#fbbf24] hover:bg-[#facc15] active:bg-[#846a02] text-black font-bold rounded-lg transition duration-300" href="{% url 'portal:registration_view' %}">Go to registration page</a>
+                </p>
+            </div>
+        </div>
+        {% endif %} {% if register_soon %}
+        <div class=" w-full m-1 rounded-lg shadow-lg  bg-white">
+            <h1 class="font-bold bg-[#7dd3fc]  p-2 rounded-t-lg">
+                Dear Student:
+            </h1>
+            <div>
+                <p class="text-justify">
+                    You registration period starts at {{semester.registration_starts}}. You can start planning now using the <a class="text-blue-500" href="{% url 'portal:registration_view' %}">planner</a>
+                </p>
+            </div>
+            <div class="card-footer bg-info pt-3">
+                {{ann.name}} <small>{{ann.adate}}</small>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% include "./credits_progress.card.html" with credit=credits_percentage mcredit=major_credits_percentage %}
+
+
+        {% comment %} <div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg  bg-white">
+            <div class="flex justify-between">
+                <span class="content-start font-medium">Credits</span>
+                <p class="content-end">80 out of 129</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                <div class="bg-[#52C3FF] h-2.5 rounded-full" style="width: 70%"></div>
+            </div>
+            <div class="flex justify-between">
+                <span class="content-start font-medium pt-2">Major Credits</span>
+                <p class="content-end mt-2">30 out of 72</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                <div class="bg-[#52C3FF] h-2.5 rounded-full" style="width: 45%"></div>
+            </div>
+        </div> {% endcomment %}
+
+        {% if graded %}
+        <div class=" w-full rounded-lg shadow-lg  bg-white">
+            <div class="flex flex-col">
+                <div class=" overflow-x-auto ">
+                    <div class="align-middle inline-block min-w-full overflow-hidden sm:rounded-lg border-b border-gray-200">
+                       
+                        <table class="min-w-full border-b bg-[#7dd3fc] rounded-lg py-3 px-2">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs leading-4 font-medium uppercase tracking-wider ">
+                                        Course #
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs leading-4 font-medium uppercase tracking-wider ">
+                                        Course Title
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs leading-4 font-medium uppercase tracking-wider ">
+                                        Grade
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            {% for g in graded %}
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div class="flex items-center">
+                                            <div class="ml-4">
+                                                <div class="text-sm leading-5 font-medium text-gray-900">{{g.section.course.course_id}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div class="flex items-center">
+                                            <div class="ml-4">
+                                                <div class="text-sm leading-5 font-medium text-gray-900">{{g.section.course.course_name}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div class="text-sm leading-5 text-gray-900">{{g.grade}}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            
+                            {% endfor %}
+                        </table>
+                         
+                    </div>
+                    <p class="text-sm pb-2 pt-3 px-5 text-right font-light">Recent Grades</p>
+                </div>
+            </div>
+        </div>
+        {% endif %} {% for ann in announcements %}
+            {% include "./announcement.card.html" with title=ann.title info=ann.info name=ann.name date=ann.adate %}
+        {% endfor %}
+    </div>
+    {% endblock %}

@@ -1,0 +1,52 @@
+<div id="remove-{{id}}" class="shadow-lg w-full md:m-1 rounded-lg bg-white ">
+    <table class="w-full">
+        <caption class="text-left pl-2 py-8 font-bold text-2xl px-2  bg-[#7dd3fc] rounded-t-lg">{{course}}</caption>
+        <tbody class="divide-y divide-dashed divide-blue-400 py-3 px-2">
+            <tr>
+                <th class="text-left px-2"> Section </th>
+                <td class="text-right  px-2"> {% if section.snumber %}{{section.snumber}}{% else %}{{section}}{% endif %}</td>
+            </tr>
+            <tr class="bg-sky-50">
+                <th class="text-left  px-2"> Instructor </th>
+                <td class="text-right  px-2"> {{instructor}}</td>
+            </tr>
+            <tr class="bg-sky-50">
+                <th class="text-left px-2"> Building </th>
+                <td class="text-right px-2"> {{building}}</td>
+            </tr>
+            <tr>
+                <th class="text-left px-2"> Room </th>
+                <td class="text-right px-2"> {{room}}</td>
+            </tr>
+            <tr class="bg-sky-50">
+                <th class="text-left px-2"> Days </th>
+                <td class="text-right px-2"> {{days}}</td>
+            </tr>
+            <tr>
+                <th class="text-left px-2"> Time </th>
+                <td class="text-right px-2"> {{section.start_time}}{{stime}} TO {{section.end_time}}{{etime}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">
+                    {% if action == "REMOVE" %}
+                    {% comment %} <a href="{% url 'portal:remove_section_view' section.id %}"> {% endcomment %}
+                    <button onclick="remove_me(this);" data-url="{% url 'portal:remove_section' %}" data-id="{{id}}" class="border-black border-b-2 active:border-b my-2 py-2 px-3 bg-red-600 hover:bg-red-400 active:bg-red-800 text-white font-bold rounded-lg transition duration-300">
+                        REMOVE!
+                    </button>
+                    {% else %}
+                    <form method="POST" action="{% url 'portal:registration_view' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="course_number"  value="{{course.course_id}}">
+                        <input type="hidden" name="course"  value="{{course.course_id}}">
+                        <input type="hidden" name="section"  value="{{section.id}}">
+                        <button type="submit" class="border-black border-b-2 active:border-b my-2 py-2 px-3 bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold rounded-lg transition duration-300">
+                            ADD
+                        </button>
+                        </form>
+                    
+                    {% endif %}
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>

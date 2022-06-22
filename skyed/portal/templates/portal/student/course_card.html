@@ -1,0 +1,22 @@
+<tr class="{{L}}">
+	<td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+			{{number}}
+	</td>
+
+	<td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+			{{title}}
+	</td>
+
+	<td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+
+			{{credit}}
+	</td>
+
+	<td class="px-3 py-4 whitespace-no-wrap border-b border-gray-200">
+		<a href="{% url 'portal:remove_from_planner' number semester year %}">
+					<button type="submit" class="py-2 px-3 border-b-2 border-black  bg-[#fbbf24] hover:bg-[#facc15] active:border-b active:mt-[1px] text-black font-bold rounded-lg transition duration-300">
+							REMOVE
+					</button>
+		</a>
+	</td>
+</tr>

@@ -1,0 +1,62 @@
+{% extends "./header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %} 
+
+    <div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-1 px-1 lg:gap-6 text-md lg:text-lg lg:px-4 ">
+        {% include "./info.card.html" with myfname=request.user.first_name mylname=request.user.last_name mysid=request.user.instructor.registration_id myterms=request.user.student.passed_terms department=request.user.instructor.dept.name %}
+
+
+        <!--add go to grading page when grade period start-->
+        {% if graded %}
+        <div class="border border-black w-full m-1 py-3 px-2 rounded-lg shadow-lg  bg-white">
+            <div class="flex flex-col">
+                <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+                    <div class="align-middle inline-block min-w-full overflow-hidden sm:rounded-lg border-b border-gray-200">
+                        <p class="font-semibold text-lg pb-2">Recent Grades</p>
+                        <table class="min-w-full border-b bg-[#7dd3fc] rounded-lg">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs leading-4 font-medium uppercase tracking-wider ">
+                                        Course #
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs leading-4 font-medium uppercase tracking-wider ">
+                                        Course Title
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs leading-4 font-medium uppercase tracking-wider ">
+                                        Grade
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            {% for g in graded %}
+                            <tbody class="bg-white">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div class="flex items-center">
+                                            <div class="ml-4">
+                                                <div class="text-sm leading-5 font-medium text-gray-900">{{g.section.course.course_id}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div class="flex items-center">
+                                            <div class="ml-4">
+                                                <div class="text-sm leading-5 font-medium text-gray-900">{{g.section.course.course_name}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div class="text-sm leading-5 text-gray-900">{{g.grade}}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %} {% for ann in announcements %}
+            {% include "../student/announcement.card.html" with title=ann.title info=ann.info name=ann.name date=ann.adate %}
+        {% endfor %}
+    </div>
+    {% endblock %}
+

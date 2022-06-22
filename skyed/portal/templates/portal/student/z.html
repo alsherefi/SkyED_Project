@@ -1,0 +1,34 @@
+{# Already exists, passed with grade C and higher, or has unpassed requisites #}
+{% if condition %}
+	{{condition}}
+{% endif %}
+
+{# Courses #}
+	{% for course in planner_courses %}
+	<form method="GET" action="{% url 'portal:registration_view' %}">
+		{% csrf_token %}
+		{{course}}
+		<input type="hidden" name="course"  value="{{course.course_id}}"> 
+		<button type="submit" id="submit2">Show Sections</button>
+		<br>
+	</form>
+	{% endfor %}
+
+{# Sections #}
+{% for section in sections %}
+<form method="POST" action="{% url 'portal:registration_view' %}">
+	{% csrf_token %}
+	<input type="hidden" name="course_number"  value="{{course_number}}">
+	<input type="hidden" name="course"  value="{{section.course.course_id}}">
+	{{section}}
+	<input type="hidden" name="section"  value="{{section.id}}"><br><br>
+	<button type="submit" id="submit2">Add Section</button>
+<br>
+</form>
+	<br>
+{% endfor %}
+
+{# Summery #}
+{% for section in summery %}
+	{{section}} {{section.semester}} {{section.year}}<br>
+{% endfor %}

@@ -1,0 +1,70 @@
+{% extends "./student_header.html" %} {% block title%} Registration Page {% endblock %} 
+{% block content %}
+<div  id="modal" class="isolate absolute w-full h-full hidden z-[100]">
+  <div class="sticky top-0 bg-black/50 min-h-full min-w-full">
+    <div class="absolute bg-green-100 h-1/3 w-1/3 left-1/4 top-1/4  border-2 rounded-lg">test
+      <div class="flex justify-center align-middle bg-teal-500 pb-2 mt-3 hover:mt-2 hover:pb-3 active:pb-1 active:mt-4 w-fit rounded-lg">
+        <button id="close" class="bg-teal-400 rounded-lg p-3  w-fit">click me to close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="flex justify-center align-middle bg-teal-500 pb-2 mt-3 hover:mt-2 hover:pb-3 active:pb-1 active:mt-4 w-fit rounded-lg">
+    <div id="open" class="bg-teal-400 rounded-lg p-3  w-fit">click me</div>
+  </div>
+  
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <div class="bg-blue-100  h-full w-full border-2 rounded-lg ">
+    test
+    <div class="flex justify-center align-middle bg-teal-500 pb-2 mt-3 hover:mt-2 hover:pb-3 active:pb-1 active:mt-4 w-fit rounded-lg">
+      <button  class="bg-teal-400 rounded-lg p-3  w-fit">click</button>
+    </div>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <div class="bg-blue-100  h-full w-full border-2 rounded-lg ">
+    test
+    <div class="flex justify-center align-middle bg-teal-500 pb-2 mt-3 hover:mt-2 hover:pb-3 active:pb-1 active:mt-4 w-fit rounded-lg">
+      <button  class="bg-teal-400 rounded-lg p-3  w-fit">click</button>
+    </div>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <div class="bg-blue-100  h-full w-full border-2 rounded-lg ">
+    test
+    <div class="flex justify-center align-middle bg-teal-500 pb-2 mt-3 hover:mt-2 hover:pb-3 active:pb-1 active:mt-4 w-fit rounded-lg">
+      <button  class="bg-teal-400 rounded-lg p-3  w-fit">click</button>
+    </div>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <div class="bg-blue-100  h-full w-full border-2 rounded-lg ">
+    test
+    <div class="flex justify-center align-middle bg-teal-500 pb-2 mt-3 hover:mt-2 hover:pb-3 active:pb-1 active:mt-4 w-fit rounded-lg">
+      <button  class="bg-teal-400 rounded-lg p-3  w-fit">click</button>
+    </div>
+  </div>
+
+  
+
+  <script>
+    $(function() {
+      $('#open').on('click', function() {
+        console.log("open");
+        $('#modal').removeClass("hidden");
+        $('body').addClass("overflow-hidden");
+      });
+
+      $( '#close').on('click', function() {
+        console.log("close");
+        $('#modal').addClass("hidden");
+        $('body').removeClass("overflow-hidden");
+      });
+
+    });
+  </script>8
+
+  
+{% endblock %} 

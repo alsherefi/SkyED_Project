@@ -1,0 +1,16 @@
+{% extends './student_header.html' %}
+
+{% block title %} Announcement Page {% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-10 md:grid-cols-2 justify-items-center gap-5 text-sm px-4">
+  
+
+{% for ann in announcements %}
+        {% include "./announcement.card.html" with title=ann.title info=ann.info name=ann.name date=ann.adate %}
+{% endfor %}
+  
+  
+
+
+</div>
+{% endblock %}

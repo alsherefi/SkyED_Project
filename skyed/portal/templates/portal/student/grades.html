@@ -1,0 +1,32 @@
+{% extends "./student_header.html" %} {% block title%} Welcome, {{request.user.first_name}} {% endblock %} {% block content %}
+<div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-rows mt-5 md:grid-cols-2 justify-items-center gap-6 text-lg px-4">
+    <div class="print:hidden border border-black w-full h[10%] m-1 py-3 px-2 rounded-t-lg shadow-lg grid md:col-span-2 bg-white">
+        <div class="text-center ">
+            <labal for="semester">Pick semester</labal>
+            <select name="semester" data-url="{% url 'portal:my_schedule' 1%}" onchange="semester_change(this);"  id="semester-opt" class="border border-black rounded">
+                {%for sem in semesters%}
+                  <option id=""  
+                      {%if sem.id == sem_id %}
+                        selected="selected"
+                      {% endif %}
+                  value="{{sem.id}}">{{sem}}</option>
+                {% endfor %}
+            </select>
+            
+        </div>
+    </div>
+    <div class=" w-full m-1 py-3 px-2 rounded-b-lg grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3  md:col-span-2">
+
+        {% for ssec in studentsec %}
+          {% include "./grade.card.html" with title=ssec.section.course.abbr grade=ssec.grade %}
+        {% endfor %}
+        
+    <div>
+</div>
+<script type="text/javascript">
+
+      function semester_change(me){
+        window.location.href = "../sem=" + me.value +"/";
+      }
+</script>
+{%endblock%}
